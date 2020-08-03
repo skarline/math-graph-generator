@@ -1,0 +1,48 @@
+body {
+  font-family: "DM Mono", monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  min-height: 100vh;
+}
+
+#canvas {
+  background-color: #fff;
+  width: 100vw;
+  height: 100vh;
+  cursor: grab;
+}
+
+#canvas:active {
+  cursor: grabbing;
+}
+
+.floating-input {
+  background-color: #fff;
+  position: absolute;
+  display: flex;
+  align-self: flex-end;
+  transform: translateY(-60px);
+  box-sizing: border-box;
+  padding: 16px 32px;
+  align-items: center;
+  width: 600px;
+  height: 80px;
+  box-shadow: 0 8px 16px #0001;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.floating-input > p {
+  color: #888;
+  font-size: 24px;
+}
+
+.floating-input > input {
+  flex: 1;
+  margin-left: 8px;
+  border: none;
+  outline: none;
+  font-size: 24px;
+}
