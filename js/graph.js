@@ -55,71 +55,82 @@ let pan = {
 };
 
 function drawAxis() {
-  ctx.beginPath();
-
-  ctx.strokeStyle = "#000";
   ctx.lineWidth = 1;
-  ctx.font = "16px Source Sans Pro";
+  ctx.font = "16px DM Mono";
   ctx.textAlign = "center";
-
-  ctx.moveTo(0, viewport.getY(0));
-  ctx.lineTo(viewport.width, viewport.getY(0));
-  ctx.stroke();
-
-  ctx.moveTo(viewport.getX(0), 0);
-  ctx.lineTo(viewport.getX(0), viewport.height);
-  ctx.stroke();
 
   const from = viewport.getAt(0, 0);
   const to = viewport.getAt(viewport.width, viewport.height);
 
+  const distance = Math.round(to.x - from.x);
+
+  let step = distance < 8 ? 0.25 : 1;
+
   // X axis
-  for (let x = Math.round(from.x); x < to.x + 20; x++) {
+  for (let x = Math.round(from.x) - 1; x < to.x + 20; x += step) {
     if (x === 0.0) continue;
+
+    let isDecimal = Math.round(x) !== x;
 
     let gx = viewport.getX(x);
     let gy = viewport.getY(0);
 
     ctx.beginPath();
-    ctx.strokeStyle = "#aaa";
+    ctx.strokeStyle = isDecimal ? "#eee" : "#aaa";
     ctx.moveTo(gx, 0);
     ctx.lineTo(gx, viewport.height);
 
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.strokeStyle = "#000";
+    ctx.strokeStyle = isDecimal ? "#444" : "#000";
     ctx.moveTo(gx, gy - 5);
     ctx.lineTo(gx, gy + 5);
 
     ctx.stroke();
 
+    ctx.fillStyle = isDecimal ? "#888" : "#000";
     ctx.fillText(x, gx, gy + 24);
   }
 
   // Y axis
-  for (let y = Math.round(from.y); y < to.y + 20; y++) {
+  for (let y = Math.round(from.y) - 1; y < to.y + 20; y += step) {
     if (y === 0.0) continue;
+
+    let isDecimal = Math.round(y) !== y;
 
     let gx = viewport.getX(0);
     let gy = viewport.getY(y);
 
     ctx.beginPath();
-    ctx.strokeStyle = "#aaa";
+    ctx.strokeStyle = isDecimal ? "#eee" : "#aaa";
     ctx.moveTo(0, gy);
     ctx.lineTo(viewport.width, gy);
 
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.strokeStyle = "#000";
+    ctx.strokeStyle = isDecimal ? "#444" : "#000";
     ctx.moveTo(gx - 5, gy);
     ctx.lineTo(gx + 5, gy);
 
     ctx.stroke();
 
-    ctx.fillText(-y, gx - 20, gy + 4);
+    ctx.fillStyle = isDecimal ? "#888" : "#000";
+    ctx.fillText(-y, gx - ctx.measureText(-y).width, gy + 4);
   }
+
+  ctx.strokeStyle = "#000";
+
+  ctx.beginPath();
+  ctx.moveTo(0, viewport.getY(0));
+  ctx.lineTo(viewport.width, viewport.getY(0));
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(viewport.getX(0), 0);
+  ctx.lineTo(viewport.getX(0), viewport.height);
+  ctx.stroke();
 
   ctx.fillText(0, viewport.getX(0) - 20, viewport.getY(0) + 24);
   ctx.fillText("x", viewport.width - 10, viewport.getY(0) - 10);
@@ -197,9 +208,7 @@ window.addEventListener("wheel", e => {
   // Apply zoom
   viewport.zoom *= 1 - e.deltaY / 1000;
 
-  if (viewport.zoom < 0.5) {
-    viewport.zoom = 0.5;
-  }
+  if (viewport.zoom < 0.5) viewport.zoom = 0.5;
 
   const newPosition = viewport.getAt(cursorPositionX, cursorPositionY);
 

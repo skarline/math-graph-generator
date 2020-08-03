@@ -34,14 +34,19 @@ body {
   border: 1px solid #ccc;
 }
 
+.floating-input > *:not(:first-child) {
+  margin-left: 8px;
+}
+
 .floating-input > p {
-  color: #888;
+  font-family: "DM Mono", monospace;
   font-size: 24px;
+  color: #888;
 }
 
 .floating-input > input {
+  font-family: "DM Mono", monospace;
   flex: 1;
-  margin-left: 8px;
   border: none;
   outline: none;
   font-size: 24px;
